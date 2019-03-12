@@ -2,48 +2,107 @@ import React, { Component } from "react";
 
 import "semantic-ui-css/semantic.min.css";
 
-import { Segment, Button, Menu, Container, Divider, Grid, Header } from "semantic-ui-react";
-
+import { Segment, Card, Image, Button, Menu, Container, Divider, Grid, Header } from "semantic-ui-react";
+import Typist from 'react-typist';
+import CountUp from 'react-countup';
 import "./App.css";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Segment inverted vertical textAlign="center">
-          <Container as="nav">
-            <Header inverted as="h1">
-              Cover
+        <Grid stackable>
+          <Grid.Row>
+          <Grid.Column width={2} >
+          </Grid.Column>
+
+          <Grid.Column width={7} >
+        <Segment inverted vertical>
+          <Container as="nav" >
+            <Header inverted as="h1" >
+              <Typist>
+                NMT Demo
+              </Typist>
             </Header>
-            <Menu borderless compact inverted>
-              <Menu.Item active>Home</Menu.Item>
-              <Menu.Item>Feature</Menu.Item>
-              <Menu.Item>Contact</Menu.Item>
-            </Menu>
           </Container>
+
           <Container className="content">
-            <Header inverted as="h1">
-              Cover your page.
-            </Header>
-            <Grid stackable padded>
-              <Grid.Column width={10}>
-                <p>.ten.wide.column</p>
-              </Grid.Column>
-              <Grid.Column width={6}>
-                <p>.six.wide.column</p>
-              </Grid.Column>
+            <Grid stackable>
+              <Grid.Row>
+                <Grid.Column width={7} >
+                  <Card color="yellow">
+                    <Image
+                      bordered
+                      rounded
+                      size="large"
+                      src="http://www.image-net.org/nodes/12/07723559/6f/6fb8d13f217201e5603e3de708e9444877da3b64.thumb"
+                    />
+
+                    <Card.Content>
+                      <Card.Header>Original</Card.Header>
+                    </Card.Content>
+
+                  </Card>
+                </Grid.Column>
+
+                <Grid.Column width={7} >
+                  <Card color="green">
+                    <Image
+                      bordered
+                      rounded
+                      size="large"
+                      src="http://www.image-net.org/nodes/12/07723559/6f/6fb8d13f217201e5603e3de708e9444877da3b64.thumb"
+                    />
+
+                    <Card.Content>
+                      <Card.Header>Processed</Card.Header>
+                    </Card.Content>
+
+                  </Card>
+                </Grid.Column>
+
+              </Grid.Row>
             </Grid>
-            <Button size="huge">Learn more</Button>
+
           </Container>
           <Segment inverted vertical as="footer">
-            Cover template for <a href="http://semantic-ui.com">Semantic-UI</a>,
-            by{" "}
-            <a href="https://github.com/semantic-ui-forest">
-              @Semantic-UI-Forest
-            </a>
-            .
+
           </Segment>
+
         </Segment>
+
+      </Grid.Column>
+
+      <Grid.Column width={3} >
+        <Container className="content">
+          <Header inverted as="h1">
+            <CountUp
+              start={0.0}
+              end={3507.012}
+              duration={2.75}
+              separator=" "
+              decimals={4}
+              decimal="."
+              suffix=" ms"
+              onEnd={() => console.log('Ended! 👏')}
+              onStart={() => console.log('Started! 💨')}
+            >
+
+              {({ countUpRef, start }) => (
+              <div>
+                  <span ref={countUpRef}  />
+                  <Divider horizontal></Divider>
+                <Button onClick={start}>Start</Button>
+                </div>
+              )}
+            </CountUp>
+          </Header>
+        </Container>
+      </Grid.Column>
+
+      </Grid.Row>
+    </Grid>
+
       </div>
     );
   }

@@ -1,17 +1,20 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: grayscale;
+
 }
 
 @media only screen and (min-width: 768px) {
   .ui.container {
     width: 700px;
     max-width: 700px;
+
   }
 
   nav.ui.container .ui.header {
     float: left;
     margin-top: 12px;
+    color:black;
   }
 
   nav.ui.container .ui.inverted.compact.menu {
@@ -24,7 +27,7 @@ body {
 }
 
 nav.ui.container .ui.inverted.compact.menu {
-  background-color: rgb(51, 51, 51);
+  background-color: white;
 }
 
 nav.ui.container .ui.inverted.compact.menu .item {
@@ -50,7 +53,7 @@ nav.ui.container .ui.inverted.compact.menu .active.item {
 
 .ui.inverted.vertical.segment {
   height: 100vh;
-  background-color: rgb(50, 50, 50);
+  background-color: white;
 }
 
 .ui.content.container {
@@ -60,11 +63,13 @@ nav.ui.container .ui.inverted.compact.menu .active.item {
   bottom: 0;
   left: 0;
   right: 0;
-  margin: auto;
+  margin: 125px;
+  color:black;
 }
 
 .ui.content.container h1.header {
   font-size: 36px;
+  color:black;
 }
 
 .ui.content.container p {
@@ -83,5 +88,5 @@ nav.ui.container .ui.inverted.compact.menu .active.item {
 }
 
 .ui.inverted.vertical.segment footer.ui.segment a {
-  color: white;
+  color: rgb(50, 50, 50);
 }
