@@ -1,0 +1,391 @@
+diff --git a/.gitignore b/.gitignore
+old mode 100644
+new mode 100755
+diff --git a/README.md b/README.md
+old mode 100644
+new mode 100755
+diff --git a/package.json b/package.json
+old mode 100644
+new mode 100755
+index b43434f..c8d39a3
+--- a/package.json
++++ b/package.json
+@@ -3,16 +3,18 @@
+   "version": "0.1.0",
+   "private": true,
+   "dependencies": {
++    "axios": "^0.18.0",
+     "react": "^16.5.2",
+     "react-countup": "^4.1.1",
+     "react-dom": "^16.5.2",
+     "react-scripts": "2.0.5",
+     "react-typist": "^2.0.5",
++    "recharts": "^1.5.0",
+     "semantic-ui-css": "^2.4.1",
+     "semantic-ui-react": "0.85.0"
+   },
+   "scripts": {
+-    "start": "react-scripts start",
++    "start": "PORT=3006 react-scripts start",
+     "build": "react-scripts build",
+     "test": "react-scripts test",
+     "eject": "react-scripts eject"
+diff --git a/public/favicon.ico b/public/favicon.ico
+old mode 100644
+new mode 100755
+diff --git a/public/index.html b/public/index.html
+old mode 100644
+new mode 100755
+diff --git a/public/manifest.json b/public/manifest.json
+old mode 100644
+new mode 100755
+diff --git a/src/App.css b/src/App.css
+old mode 100644
+new mode 100755
+index 8675d93..178fd37
+--- a/src/App.css
++++ b/src/App.css
+@@ -4,7 +4,9 @@ body {
+ 
+ }
+ 
++
+ @media only screen and (min-width: 768px) {
++
+   .ui.container {
+     width: 700px;
+     max-width: 700px;
+@@ -13,13 +15,15 @@ body {
+ 
+   nav.ui.container .ui.header {
+     float: left;
+-    margin-top: 12px;
++    margin-top: 42px;
+     color:black;
+   }
+ 
+   nav.ui.container .ui.inverted.compact.menu {
+     float: right;
+   }
++
++  
+ }
+ 
+ .ui.inverted.vertical.center.aligned.segment {
+@@ -90,3 +94,35 @@ nav.ui.container .ui.inverted.compact.menu .active.item {
+ .ui.inverted.vertical.segment footer.ui.segment a {
+   color: rgb(50, 50, 50);
+ }
++
++.ui.card.inputdata {
++    height:45vh;
++    
++}
++
++.ui.card.status {
++    height:25vh;
++    width:40vw;
++    overflow: 'auto';
++}
++
++.div.content.labels{
++    height:1vh;
++
++}
++
++.ui.card.inputdata {
++    margin:0;
++    padding:10px;
++    box-sizing: border-box;
++}
++
++.ui.container.content.graph {
++    padding:0;
++    margin-left:0px !important;
++}
++
++.ui.header.chart-title {
++    padding-left:50px;
++}
++
+diff --git a/src/App.jsx b/src/App.jsx
+old mode 100644
+new mode 100755
+index fcf4d6f..552e98d
+--- a/src/App.jsx
++++ b/src/App.jsx
+@@ -5,9 +5,57 @@ import "semantic-ui-css/semantic.min.css";
+ import { Segment, Card, Image, Button, Menu, Container, Divider, Grid, Header } from "semantic-ui-react";
+ import Typist from 'react-typist';
+ import CountUp from 'react-countup';
++import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
++import axios from 'axios';
++
+ import "./App.css";
+ 
++var links = [
++  { url: 'http://www.image-net.org/nodes/8/12050533/25/25d5a3cf3a7faf767727ec49dc3ef5a88a9743cf.thumb' },
++  { url: 'http://www.image-net.org/nodes/3/03954731/27/27a059a6ab1abd5b9025f4fb9ef387fda0561e27.thumb' },
++  { url: 'http://www.image-net.org/nodes/3/02086079/5c/5ccac5a3495f01a5fc9c307b22ee56692a689a91.thumb' },
++  { url: 'http://www.image-net.org/nodes/8/02898711/01/011f2a66c52e198205eeb3e4cf4bf7a24aec2cab.thumb' }
++];
++
++var router_url = 'http://10.105.159.221:31283';
++var function_name = 'call-incept';
++
++const data = [{iteration: '0', exec_time: 3.24}, {iteration: '1', exec_time: 3.25}, {iteration: '2', exec_time: 4.5}, {iteration: '3', exec_time: 4.23},{iteration: '4', exec_time: 2.23},{iteration: '5', exec_time: 3.73},{iteration: '6', exec_time: 4.63},{iteration: '7', exec_time: 3.23}];
+ class App extends Component {
++    
++    constructor(props) {
++        super(props);
++        this.state = {current_image:"http://www.image-net.org/nodes/14/02120079/69/69486b2ac434fe7e850e9e6c550d5ea4cab3d443.thumb"};
++
++        // This binding is necessary to make `this` work in the callback
++        this.handleClick = this.handleClick.bind(this);
++    }
++
++    handleClick() {
++        console.log('The link was clicked.');
++        links.forEach(function (link) {
++            
++            var url = link.url
++            console.log(url);
++            url = router_url + '/' + function_name + '?key=' + url
++            axios.get(url,  {
++                headers: {
++                'Access-Control-Allow-Origin': '*',
++                }})
++                .then(function (response) {
++                console.log(response)
++                })
++                .catch(function (error) {
++                console.log(error)
++                });
++
++         });
++    
++
++  }
++ 
++
++
+   render() {
+     return (
+       <div className="App">
+@@ -17,86 +65,81 @@ class App extends Component {
+           </Grid.Column>
+ 
+           <Grid.Column width={7} >
+-        <Segment inverted vertical>
++        
+           <Container as="nav" >
+             <Header inverted as="h1" >
+               <Typist>
+-                NMT Demo
++                FaaS Demo
+               </Typist>
+             </Header>
+           </Container>
+ 
+           <Container className="content">
+             <Grid stackable>
+-              <Grid.Row>
+-                <Grid.Column width={7} >
++              <Grid.Row columns={2}>
++                <Grid.Column>
+                   <Card color="yellow">
+-                    <Image
+-                      bordered
+-                      rounded
+-                      size="large"
+-                      src="http://www.image-net.org/nodes/12/07723559/6f/6fb8d13f217201e5603e3de708e9444877da3b64.thumb"
+-                    />
+-
+-                    <Card.Content>
+-                      <Card.Header>Original</Card.Header>
++                    <Card className="inputdata">
++                        <Image
++                        bordered
++                        rounded
++                        size="large"
++                        src="http://www.image-net.org/nodes/13/02101006/cc/ccc963e3b15bd195cd0de21d621791f9ec7cf41a.thumb"
++                        />
++                    </Card>
++                    <Card.Content className="labels">
++                      <Card.Header>Input</Card.Header>
+                     </Card.Content>
+ 
+                   </Card>
+                 </Grid.Column>
+ 
+-                <Grid.Column width={7} >
++                <Grid.Column >
+                   <Card color="green">
+-                    <Image
+-                      bordered
+-                      rounded
+-                      size="large"
+-                      src="http://www.image-net.org/nodes/12/07723559/6f/6fb8d13f217201e5603e3de708e9444877da3b64.thumb"
+-                    />
+-
+-                    <Card.Content>
+-                      <Card.Header>Processed</Card.Header>
++                    <Card className="inputdata">
++                    
++                    <Header>
++                     Dog
++                    </Header>
++                    </Card>
++                    <Card.Content className="labels">
++                      <Card.Header>Output</Card.Header>
+                     </Card.Content>
+ 
+                   </Card>
+                 </Grid.Column>
+ 
+               </Grid.Row>
++            <Grid.Row>
++                <Container>
++                <Button onClick={this.handleClick}>Start</Button>
++                <Divider></Divider>
++                    <Card className="status">
++                    <Card.Content><strong>Iteration 2:</strong> pulling image...<br/><strong>Iteration 2:</strong> sending request </Card.Content>
++                    </Card>
++                </Container>
++            </Grid.Row>
+             </Grid>
+ 
+           </Container>
+-          <Segment inverted vertical as="footer">
+-
+-          </Segment>
+-
+-        </Segment>
++        
++        
+ 
+       </Grid.Column>
+ 
+-      <Grid.Column width={3} >
+-        <Container className="content">
+-          <Header inverted as="h1">
+-            <CountUp
+-              start={0.0}
+-              end={3507.012}
+-              duration={2.75}
+-              separator=" "
+-              decimals={4}
+-              decimal="."
+-              suffix=" ms"
+-              onEnd={() => console.log('Ended! 👏')}
+-              onStart={() => console.log('Started! 💨')}
+-            >
+-
+-              {({ countUpRef, start }) => (
+-              <div>
+-                  <span ref={countUpRef}  />
+-                  <Divider horizontal></Divider>
+-                <Button onClick={start}>Start</Button>
+-                </div>
+-              )}
+-            </CountUp>
+-          </Header>
++      <Grid.Column width={7}>
++            
++            
++            <Container className="content graph">
++            <Header className="chart-title">Performance chart</Header>
++            <LineChart width={500} height={250} data={data} margin={{ top: 0, right: 30, bottom: 0, left: 0 }}>
++                <Line type="monotone" dataKey="exec_time" stroke="#8884d8" />
++                <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
++                <XAxis dataKey="name" />
++                <YAxis />
++                <Tooltip />
++            </LineChart>
++          
+         </Container>
+       </Grid.Column>
+ 
+diff --git a/src/App.test.js b/src/App.test.js
+old mode 100644
+new mode 100755
+diff --git a/src/index.css b/src/index.css
+old mode 100644
+new mode 100755
+diff --git a/src/index.js b/src/index.js
+old mode 100644
+new mode 100755
+diff --git a/src/logo.svg b/src/logo.svg
+old mode 100644
+new mode 100755
+diff --git a/src/serviceWorker.js b/src/serviceWorker.js
+old mode 100644
+new mode 100755
+diff --git a/yarn.lock b/yarn.lock
+old mode 100644
+new mode 100755
+index 8563774..8096321
+--- a/yarn.lock
++++ b/yarn.lock
+@@ -1212,6 +1212,14 @@ aws4@^1.8.0:
+   version "1.8.0"
+   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
+ 
++axios@^0.18.0:
++  version "0.18.0"
++  resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"
++  integrity sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=
++  dependencies:
++    follow-redirects "^1.3.0"
++    is-buffer "^1.1.5"
++
+ axobject-query@^2.0.1:
+   version "2.0.1"
+   resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-2.0.1.tgz#05dfa705ada8ad9db993fa6896f22d395b0b0a07"
+@@ -1458,6 +1466,11 @@ babylon@^6.18.0:
+   version "6.18.0"
+   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.18.0.tgz#af2f3b88fa6f5c1e4c634d1a0f8eac4f55b395e3"
+ 
++balanced-match@^0.4.2:
++  version "0.4.2"
++  resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
++  integrity sha1-yz8+PHMtwPAe5wtAPzAuYddwmDg=
++
+ balanced-match@^1.0.0:
+   version "1.0.0"
+   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+@@ -1880,7 +1893,7 @@ class-utils@^0.3.5:
+     isobject "^3.0.0"
+     static-extend "^0.1.1"
+ 
+-classnames@^2.2.6:
++classnames@^2.2.6, classnames@~2.2.5:
+   version "2.2.6"
+   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
+ 
+@@ -2110,7 +2123,7 @@ copy-descriptor@^0.1.0:
+   version "0.1.1"
+   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
+ 
+-core-js@2.5.7, core-js@^2.4.0, core-js@^2.5.0:
++core-js@2.5.7, core-js@^2.4.0, core-js@^2.5.0, core-js@~2.5.1:
+   version "2.5.7"
+   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
+ 
+@@ -2379,6 +2392,69 @@ cyclist@~0.2.2:
+   version "0.2.2"
+   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
+ 
++d3-array@^1.2.0:
++  version "1.2.4"
++  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
++  integrity sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==
++
++d3-collection@1:
++  version "1.0.7"
++  resolved "https://registry.yarnpkg.com/d3-collection/-/d3-collection-1.0.7.tgz#349bd2aa9977db071091c13144d5e4f16b5b310e"
++  integrity sha512-ii0/r5f4sjKNTfh84Di+DpztYwqKhEyUlKoPrzUFfeSkWxjW49xU2QzO9qrPrNkpdI0XJkfzvmTu8V2Zylln6A==
++
++d3-color@1:
++  version "1.2.3"
++  resolved "https://registry.ya

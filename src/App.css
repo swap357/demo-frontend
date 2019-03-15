@@ -4,7 +4,9 @@ body {
 
 }
 
+
 @media only screen and (min-width: 768px) {
+
   .ui.container {
     width: 700px;
     max-width: 700px;
@@ -13,13 +15,15 @@ body {
 
   nav.ui.container .ui.header {
     float: left;
-    margin-top: 12px;
+    margin-top: 42px;
     color:black;
   }
 
   nav.ui.container .ui.inverted.compact.menu {
     float: right;
   }
+
+  
 }
 
 .ui.inverted.vertical.center.aligned.segment {
@@ -90,3 +94,35 @@ nav.ui.container .ui.inverted.compact.menu .active.item {
 .ui.inverted.vertical.segment footer.ui.segment a {
   color: rgb(50, 50, 50);
 }
+
+.ui.card.inputdata {
+    height:45vh;
+    
+}
+
+.ui.card.status {
+    height:25vh;
+    width:40vw;
+    overflow: 'auto';
+}
+
+.div.content.labels{
+    height:1vh;
+
+}
+
+.ui.card.inputdata {
+    margin:0;
+    padding:10px;
+    box-sizing: border-box;
+}
+
+.ui.container.content.graph {
+    padding:0;
+    margin-left:0px !important;
+}
+
+.ui.header.chart-title {
+    padding-left:50px;
+}
+
